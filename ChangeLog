@@ -1,3 +1,15 @@
+leeh        2010/02/13 11:33:46 UTC	(20100213_0-26819)
+  Log:
+  - merge 26817 from trunk
+    - add support for +S into alis
+  
+
+  Modified:
+	rserv/branches/1_2/help/bg/alis/list (File Modified) 
+	rserv/branches/1_2/help/en/alis/list (File Modified) 
+	rserv/branches/1_2/src/s_alis.c (File Modified) 
+
+
 leeh        2010/02/04 19:16:21 UTC	(20100204_1-26775)
   Log:
   - update RELEASE_NOTES
