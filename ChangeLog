@@ -1,3 +1,17 @@
+leeh        2010/02/13 13:26:54 UTC	(20100213_3-26837)
+  Log:
+  - merge 26833 from trunk
+    - move the topic resetting code up to enable_inhabit(), so chanserv will
+      enforce the topic whenever it joins a channel for any reason..
+  - merge 26835 from trunk
+    - move chanservs enforcetopic over to a slightly less efficient but more
+      reliable test for whether chanserv is in there
+  
+
+  Modified:
+	rserv/branches/1_2/src/s_chanserv.c (File Modified) 
+
+
 leeh        2010/02/13 13:13:58 UTC	(20100213_2-26831)
   Log:
   - merge 28269 from trunk
