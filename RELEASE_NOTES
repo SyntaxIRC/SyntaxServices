@@ -1,5 +1,13 @@
 
-This is the current development version of ratbox-services.
+This is the current stable version of ratbox-services.
+
+-- ratbox-services-1.2.3
+- add support for +S into ALIS
+- fix permanent chanserv bans not applying to users joining a channel
+- chanserv::addban and chanserv::delban no longer require the channel exists
+- fix a minor buffer overflow relating to +S and ALIS.
+  This affects 1.2.2 only, no other versions are affected and the impact is
+  somewhat limited.
 
 -- ratbox-services-1.2.2
 - fix compilation with gcc-4.4
