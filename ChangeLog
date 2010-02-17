@@ -1,3 +1,14 @@
+leeh        2010/02/17 20:45:09 UTC	(20100217_2-26887)
+  Log:
+  - updated RELEASE_NOTES
+  - revved patchlevel to 1.2.3
+  
+
+  Modified:
+	rserv/branches/1_2/RELEASE_NOTES (File Modified) 
+	rserv/branches/1_2/include/config.h (File Modified) 
+
+
 leeh        2010/02/17 20:29:33 UTC	(20100217_1-26885)
   Log:
   - merge 26883 from trunk
