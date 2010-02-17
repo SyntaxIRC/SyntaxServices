@@ -1,3 +1,13 @@
+leeh        2010/02/17 20:29:33 UTC	(20100217_1-26885)
+  Log:
+  - merge 26883 from trunk
+    - fix a buffer overflow
+  
+
+  Modified:
+	rserv/branches/1_2/src/channel.c (File Modified) 
+
+
 leeh        2010/02/17 20:24:39 UTC	(20100217_0-26881)
   Log:
   - revert 26837 as I need to cut a build and it makes autojoin_empty unusable
