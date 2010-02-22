@@ -647,7 +647,7 @@ chmode_to_string(struct chmode *mode)
 const char *
 chmode_to_string_simple(struct chmode *mode)
 {
-	static char buf[BUFSIZE];
+	static char buf[10];
 	char *p;
 
 	p = buf;
