@@ -1,3 +1,43 @@
+leeh        2010/02/22 19:36:09 UTC	(20100222_1-26911)
+  Log:
+  - merge in various commits from trunk to make the whole enforcement of
+    topics in chanserv much more consistent.
+  
+    If chanserv is in the channel for any reason, it will enforce the topic
+    according to the timer -- otherwise it won't.
+  
+  - merge 26833 from trunk
+    - move the topic resetting code up to enable_inhabit(), so chanserv will
+      enforce the topic whenever it joins a channel for any reason..
+  - merge 26835 from trunk
+    - move chanservs enforcetopic over to a slightly less efficient but more
+      reliable test for whether chanserv is in there
+  - merge 26899 from trunk
+    - start storing topic_tsinfo for channels, as when the topic was last reset
+    - follow the rules on receiving a topicburst, ignoring it if the burst
+      topic is newer
+  - merge 26901 from trunk
+    - add in tracking for whether our uplink supports TB
+  - merge 26903 from trunk
+    - new param to introduce_service_channels(), controlling whether it sends a
+      TB or not, and support sending a TB when thats true and our uplink
+      supports it too
+    - introduce channels with TB on initial burst only
+    - make chanserv whinge when we get an EOB from our uplink and it doesn't
+      support TB
+  
+
+  Modified:
+	rserv/branches/1_2/include/channel.h (File Modified) 
+	rserv/branches/1_2/include/io.h (File Modified) 
+	rserv/branches/1_2/include/service.h (File Modified) 
+	rserv/branches/1_2/src/channel.c (File Modified) 
+	rserv/branches/1_2/src/client.c (File Modified) 
+	rserv/branches/1_2/src/s_chanserv.c (File Modified) 
+	rserv/branches/1_2/src/scommand.c (File Modified) 
+	rserv/branches/1_2/src/service.c (File Modified) 
+
+
 leeh        2010/02/22 18:30:06 UTC	(20100222_0-26907)
   Log:
   - merge 26895 from trunk
