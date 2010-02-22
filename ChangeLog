@@ -1,3 +1,15 @@
+leeh        2010/02/22 18:30:06 UTC	(20100222_0-26907)
+  Log:
+  - merge 26895 from trunk
+    - fix the --enable-mysql and --enable-pgsql check
+  
+
+  Modified:
+	rserv/branches/1_2/aclocal.m4 (File Modified) 
+	rserv/branches/1_2/configure (File Modified) 
+	rserv/branches/1_2/src/channel.c (File Modified) 
+
+
 leeh        2010/02/17 20:45:09 UTC	(20100217_2-26887)
   Log:
   - updated RELEASE_NOTES
