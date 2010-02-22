@@ -51,7 +51,8 @@ extern dlink_list connection_list;
 #define CONN_TS			0x0040
 #define CONN_CAP_SERVICE	0x0080
 #define CONN_CAP_RSFNC		0x0100
-#define CONN_TS6		0x0200
+#define CONN_CAP_TB		0x0200
+#define CONN_TS6		0x0400
 /* CONTINUES ... */
 
 #define ConnConnecting(x)	((x)->flags & CONN_CONNECTING)
@@ -64,6 +65,7 @@ extern dlink_list connection_list;
 #define ConnTS6(x)		((x)->flags & CONN_TS6)
 #define ConnCapService(x)	((x)->flags & CONN_CAP_SERVICE)
 #define ConnCapRSFNC(x)		((x)->flags & CONN_CAP_RSFNC)
+#define ConnCapTB(x)		((x)->flags & CONN_CAP_TB)
 
 #define SetConnConnecting(x)	((x)->flags |= CONN_CONNECTING)
 #define SetConnDccIn(x)		((x)->flags |= CONN_DCCIN)
@@ -82,6 +84,7 @@ extern dlink_list connection_list;
 #define CONN_FLAGS_UNTERMINATED	0x01000
 #define CONN_FLAGS_EOB		0x02000
 #define CONN_FLAGS_SENTBURST	0x04000
+/* CONTINUES ... */
 
 #define SetConnSentBurst(x)	((x)->flags |= CONN_FLAGS_SENTBURST)
 #define SetConnEOB(x)		((x)->flags |= CONN_FLAGS_EOB)

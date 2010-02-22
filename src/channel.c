@@ -485,6 +485,7 @@ c_topic(struct client *client_p, const char *parv[], int parc)
 	{
 		chptr->topic[0] = '\0';
 		chptr->topicwho[0] = '\0';
+		chptr->topic_tsinfo = 0;
 	}
 	else
 	{
@@ -496,6 +497,8 @@ c_topic(struct client *client_p, const char *parv[], int parc)
 				 client_p->user->host);
 		else
 			strlcpy(chptr->topicwho, client_p->name, sizeof(chptr->topicwho));
+
+		chptr->topic_tsinfo = CURRENT_TIME;
 	}
 }
 
@@ -506,11 +509,20 @@ static void
 c_tb(struct client *client_p, const char *parv[], int parc)
 {
 	struct channel *chptr;
+	time_t topicts;
 
 	if(parc < 3 || !IsServer(client_p))
 		return;
 
 	if((chptr = find_channel(parv[0])) == NULL)
+		return;
+
+	topicts = atol(parv[1]);
+
+	/* If we have a topic that is older than the one burst to us, ours
+	 * wins -- otherwise process the topic burst
+	 */
+	if(!EmptyString(chptr->topic) && topicts > chptr->topic_tsinfo)
 		return;
 
 	/* :<server> TB <#channel> <topicts> <topicwho> :<topic> */
@@ -521,6 +533,7 @@ c_tb(struct client *client_p, const char *parv[], int parc)
 
 		strlcpy(chptr->topic, parv[3], sizeof(chptr->topic));
 		strlcpy(chptr->topicwho, parv[2], sizeof(chptr->topicwho));
+		chptr->topic_tsinfo = CURRENT_TIME;
 	}
 	/* :<server> TB <#channel> <topicts> :<topic> */
 	else
@@ -530,6 +543,7 @@ c_tb(struct client *client_p, const char *parv[], int parc)
 
 		strlcpy(chptr->topic, parv[2], sizeof(chptr->topic));
 		strlcpy(chptr->topicwho, client_p->name, sizeof(chptr->topicwho));
+		chptr->topic_tsinfo = CURRENT_TIME;
 	}
 }
 

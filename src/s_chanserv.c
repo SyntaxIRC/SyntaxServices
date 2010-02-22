@@ -171,6 +171,7 @@ static int h_chanserv_mode_ban(void *chptr, void *list);
 static int h_chanserv_sjoin_lowerts(void *chptr, void *unused);
 static int h_chanserv_user_login(void *client, void *unused);
 static int h_chanserv_dbsync(void *unused, void *unusedd);
+static int h_chanserv_eob_uplink(void *unused, void *unusedd);
 static void e_chanserv_updatechan(void *unused);
 static void e_chanserv_expirechan(void *unused);
 static void e_chanserv_expireban(void *unused);
@@ -206,6 +207,7 @@ init_s_chanserv(void)
 	hook_add(h_chanserv_sjoin_lowerts, HOOK_SJOIN_LOWERTS);
 	hook_add(h_chanserv_user_login, HOOK_USER_LOGIN);
 	hook_add(h_chanserv_dbsync, HOOK_DBSYNC);
+	hook_add(h_chanserv_eob_uplink, HOOK_FINISHED_BURSTING);
 
 	eventAdd("chanserv_updatechan", e_chanserv_updatechan, NULL, 3600);
 	eventAdd("chanserv_expirechan", e_chanserv_expirechan, NULL, 43200);
@@ -712,6 +714,19 @@ enable_inhabit(struct chan_reg *chreg_p, struct channel *chptr, int autojoin)
 	join_service(chanserv_p, chreg_p->name, chreg_p->tsinfo,
 			chreg_p->emode.mode ? &chreg_p->emode :
 			&chreg_p->cmode, autojoin);
+
+	if(chptr == NULL)
+		chptr = find_channel(chreg_p->name);
+
+	/* we have a topic to enforce, and channel one is different.. */
+	if(chptr && !EmptyString(chreg_p->topic) && irccmp(chreg_p->topic, chptr->topic))
+	{
+		sendto_server(":%s TOPIC %s :%s",
+				SVC_UID(chanserv_p), chptr->name, chreg_p->topic);
+		strlcpy(chptr->topic, chreg_p->topic, sizeof(chptr->topic));
+		strlcpy(chptr->topicwho, MYNAME, sizeof(chptr->topicwho));
+		chptr->topic_tsinfo = CURRENT_TIME;
+	}
 }
 
 static void
@@ -944,12 +959,14 @@ e_chanserv_enforcetopic(void *unused)
 	{
 		chreg_p = ptr->data;
 
-		/* we must be joined to set a topic.. */
-		if(EmptyString(chreg_p->topic) ||
-		   !(chreg_p->flags & CS_FLAGS_AUTOJOIN))
+		if(EmptyString(chreg_p->topic))
 			continue;
 
+		/* we must be joined to set a topic.. */
 		if((chptr = find_channel(chreg_p->name)) == NULL)
+			continue;
+
+		if(dlink_find(chanserv_p, &chptr->services) == NULL)
 			continue;
 
 		/* already has this topic set.. */
@@ -960,6 +977,7 @@ e_chanserv_enforcetopic(void *unused)
 				SVC_UID(chanserv_p), chptr->name, chreg_p->topic);
 		strlcpy(chptr->topic, chreg_p->topic, sizeof(chptr->topic));
 		strlcpy(chptr->topicwho, MYNAME, sizeof(chptr->topicwho));
+		chptr->topic_tsinfo = CURRENT_TIME;
 	}
 	HASH_WALK_END
 }
@@ -1439,15 +1457,6 @@ h_chanserv_join(void *v_chptr, void *v_members)
 		if(chreg_p->flags & CS_FLAGS_AUTOJOIN && dlink_find(chanserv_p, &chptr->services) == NULL)
 		{
 			enable_inhabit(chreg_p, chptr, 1);
-
-			/* we have a topic to enforce, and channel one is different.. */
-			if(!EmptyString(chreg_p->topic) && irccmp(chreg_p->topic, chptr->topic))
-			{
-				sendto_server(":%s TOPIC %s :%s",
-						SVC_UID(chanserv_p), chptr->name, chreg_p->topic);
-				strlcpy(chptr->topic, chreg_p->topic, sizeof(chptr->topic));
-				strlcpy(chptr->topicwho, MYNAME, sizeof(chptr->topicwho));
-			}
 		}
 			
 		/* removed ops from them, or they joined opped.. cant be setting them */
@@ -1547,6 +1556,37 @@ h_chanserv_user_login(void *v_client_p, void *unused)
 					UID(member_p->client_p));
 			member_p->flags |= MODE_VOICED;
 		}
+	}
+
+	return 0;
+}
+
+/* h_chanserv_eob_uplink()
+ *   Called when we receive EOB from our uplink
+ */
+static int
+h_chanserv_eob_uplink(void *unused, void *unusedd)
+{
+	/* ugh, uplink doesn't support topic bursting */
+	if(!ConnCapTB(server_p))
+	{
+		/* ok, here is the general idea.  When an uplink supports TB
+		 * the generic code for introducing a service to a
+		 * channel will also burst the topic.
+		 *
+		 * If an uplink doesn't support TB -- chanserv will re-issue
+		 * topics for all channels its in, but the other services
+		 * (such as operserv/operbot) will not.  If chanserv joins
+		 * later, it may not enforce topics as it may not think it
+		 * needs to..
+		 *
+		 * There's various other reasons for enabling TB, so just
+		 * ask the users to enable it. --anfl
+		 */
+		mlog("Warning: Connection to uplink does not support topic bursting. "
+			"This will cause problems in some rare situations.");
+
+		/* code for resetting chanserv topics goes here */
 	}
 
 	return 0;
@@ -2966,6 +3006,7 @@ s_chan_set(struct client *client_p, struct lconn *conn_p, const char *parv[], in
 						SVC_UID(chanserv_p), chptr->name, chreg_p->topic);
 				strlcpy(chptr->topic, chreg_p->topic, sizeof(chptr->topic));
 				strlcpy(chptr->topicwho, MYNAME, sizeof(chptr->topicwho));
+				chptr->topic_tsinfo = CURRENT_TIME;
 			}
 		}
 
