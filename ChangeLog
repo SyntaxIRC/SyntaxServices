@@ -1,3 +1,25 @@
+leeh        2010/02/28 13:05:30 UTC	(20100228_0-26963)
+  Log:
+  - merge from trunk
+    - merge 26957
+      - via Narf, userserv is passing in the wrong parameter ordering to
+        SVC_INFO_SUSPENDEDADMIN when reasons are to be shown
+    - merge 26961
+      - take --include from mysql_config, not --cflags
+      - ensure we include <mysql.h> and <errmsg.h> for mysql, rather than
+        <mysql/...>
+  
+        Looks like along with everyone else, we just have to hope there are no
+        OS conficts with errmsg.h
+  
+
+  Modified:
+	rserv/branches/1_2/aclocal.m4 (File Modified) 
+	rserv/branches/1_2/configure (File Modified) 
+	rserv/branches/1_2/src/rsdb_mysql.c (File Modified) 
+	rserv/branches/1_2/src/s_userserv.c (File Modified) 
+
+
 leeh        2010/02/22 19:36:09 UTC	(20100222_1-26911)
   Log:
   - merge in various commits from trunk to make the whole enforcement of
