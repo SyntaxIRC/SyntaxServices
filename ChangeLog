@@ -1,3 +1,14 @@
+leeh        2010/03/21 13:10:03 UTC	(20100321_1-27005)
+  Log:
+  - merge 26965 from trunk
+    - clarify the INSTALL instructions as to how the database engines lookup
+      paths
+  
+
+  Modified:
+	rserv/branches/1_2/INSTALL (File Modified) 
+
+
 leeh        2010/03/21 13:08:59 UTC	(20100321_0-27003)
   Log:
   - merge 26913 from trunk
