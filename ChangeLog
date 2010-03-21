@@ -1,3 +1,27 @@
+leeh        2010/03/21 13:08:59 UTC	(20100321_0-27003)
+  Log:
+  - merge 26913 from trunk
+    - add a hook for when the topic changes on a channel
+    - support enforcetopic_frequency of 0 to enforce automatically on a topic
+      change
+  - merge 26915 from trunk
+    - make the hook for enforcing topics only work when chanserv is in the
+      channel
+  - merge 27001 from trunk
+    - make events with a frequency == -1 'disabled', frequency==0 events are
+      'oneshot' and removed after running -- frequency==-1 are kept around
+    - make eventAdd() and eventUpdate() convert freq==0 -> -1 to disable them
+  
+
+  Modified:
+	rserv/branches/1_2/include/event.h (File Modified) 
+	rserv/branches/1_2/include/hook.h (File Modified) 
+	rserv/branches/1_2/src/channel.c (File Modified) 
+	rserv/branches/1_2/src/event.c (File Modified) 
+	rserv/branches/1_2/src/newconf.c (File Modified) 
+	rserv/branches/1_2/src/s_chanserv.c (File Modified) 
+
+
 leeh        2010/02/28 13:05:30 UTC	(20100228_0-26963)
   Log:
   - merge from trunk
