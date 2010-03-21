@@ -500,6 +500,8 @@ c_topic(struct client *client_p, const char *parv[], int parc)
 
 		chptr->topic_tsinfo = CURRENT_TIME;
 	}
+
+	hook_call(HOOK_CHANNEL_TOPIC, chptr, NULL);
 }
 
 /* c_tb()
@@ -545,6 +547,8 @@ c_tb(struct client *client_p, const char *parv[], int parc)
 		strlcpy(chptr->topicwho, client_p->name, sizeof(chptr->topicwho));
 		chptr->topic_tsinfo = CURRENT_TIME;
 	}
+
+	hook_call(HOOK_CHANNEL_TOPIC, chptr, NULL);
 }
 
 /* remove_our_modes()

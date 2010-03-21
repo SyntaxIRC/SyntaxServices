@@ -97,12 +97,25 @@ eventAdd(const char *name, EVH * func, void *arg, time_t when)
 			event_table[i].func = func;
 			event_table[i].name = name;
 			event_table[i].arg = arg;
-			event_table[i].when = CURRENT_TIME + when + delta;
-			event_table[i].frequency = when + delta;
 			event_table[i].active = 1;
 
-			if((event_table[i].when < event_time_min) || (event_time_min == -1))
-				event_time_min = event_table[i].when;
+			if(when)
+			{
+				event_table[i].when = CURRENT_TIME + when + delta;
+				event_table[i].frequency = when + delta;
+
+				if((event_table[i].when < event_time_min) || (event_time_min == -1))
+					event_time_min = event_table[i].when;
+			}
+			/* when == 0 means "disabled", set frequency to -1
+			 * because events with a frequency of 0 are
+			 * "oneshot" --anfl
+			 */
+			else
+			{
+				event_table[i].when = 0;
+				event_table[i].frequency = -1;
+			}
 
 			return;
 		}
@@ -171,7 +184,9 @@ eventRun(void)
 
 	for (i = 0; i < MAX_EVENTS; i++)
 	{
-		if(event_table[i].active && (event_table[i].when <= CURRENT_TIME))
+		/* skip inactive events, and ones "disabled" (freq == -1) */
+		if(event_table[i].active && event_table[i].frequency >= 0 &&
+			(event_table[i].when <= CURRENT_TIME))
 		{
 			event_table[i].func(event_table[i].arg);
 
@@ -212,7 +227,8 @@ eventNextTime(void)
 	{
 		for (i = 0; i < MAX_EVENTS; i++)
 		{
-			if(event_table[i].active &&
+			/* skip inactive events, and ones "disabled" (freq == -1) */
+			if(event_table[i].active && event_table[i].frequency >= 0 &&
 			   ((event_table[i].when < event_time_min) || (event_time_min == -1)))
 				event_time_min = event_table[i].when;
 		}
@@ -231,13 +247,18 @@ eventUpdate(const char *name, time_t freq)
 		if(event_table[i].active && 
 		   !irccmp(event_table[i].name, name))
 		{
-			event_table[i].frequency = freq;
+			if(freq > 0)
+			{
+				event_table[i].frequency = freq;
 
-			/* update when its scheduled to run if its higher
-			 * than the new frequency
-			 */
-			if((CURRENT_TIME + freq) < event_table[i].when)
-				event_table[i].when = CURRENT_TIME + freq;
+				/* update when its scheduled to run if its higher
+				 * than the new frequency
+				 */
+				if((CURRENT_TIME + freq) < event_table[i].when)
+					event_table[i].when = CURRENT_TIME + freq;
+			}
+			else
+				event_table[i].frequency = -1;
 
 			return;
 		}
@@ -282,6 +303,7 @@ eventFind(EVH * func, void *arg)
 void
 event_show(struct lconn *conn_p)
 {
+	time_t duration;
         int i;
 
         sendto_one(conn_p, "Events: Function                    Next");
@@ -291,8 +313,12 @@ event_show(struct lconn *conn_p)
                 if(!event_table[i].active)
                         continue;
 
+		duration = event_table[i].when - CURRENT_TIME;
+
+		if(event_table[i].frequency == -1)
+			duration = -1;
+
                 sendto_one(conn_p, "        %-27s %-4ld seconds",
-                           event_table[i].name,
-                           (event_table[i].when - CURRENT_TIME));
+                           event_table[i].name, duration);
         }
 }
