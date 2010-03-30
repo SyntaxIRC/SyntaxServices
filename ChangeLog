@@ -1,3 +1,13 @@
+leeh        2010/03/30 21:19:27 UTC	(20100330_1-27015)
+  Log:
+  - merge 27013 from trunk
+    - recv returns an ssize_t, not a size_t
+  
+
+  Modified:
+	rserv/branches/1_2/src/io.c (File Modified) 
+
+
 leeh        2010/03/30 19:46:44 UTC	(20100330_0-27011)
   Log:
   - merge from trunk
