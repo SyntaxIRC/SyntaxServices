@@ -1,3 +1,14 @@
+leeh        2010/04/22 18:21:17 UTC	(20100422_0-27021)
+  Log:
+  - merge from trunk
+    - r27019, add modified version of esoterics patch to add startup options
+      controlling the path to chroot to and the uid/gid to drop privs to
+  
+
+  Modified:
+	rserv/branches/1_2/src/rserv.c (File Modified) 
+
+
 leeh        2010/03/30 21:19:27 UTC	(20100330_1-27015)
   Log:
   - merge 27013 from trunk
