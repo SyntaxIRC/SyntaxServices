@@ -1,3 +1,14 @@
+leeh        2010/04/22 18:27:28 UTC	(20100422_1-27023)
+  Log:
+  - update RELEASE_NOTES
+  - revved patchlevel to 1.2.4
+  
+
+  Modified:
+	rserv/branches/1_2/RELEASE_NOTES (File Modified) 
+	rserv/branches/1_2/include/config.h (File Modified) 
+
+
 leeh        2010/04/22 18:21:17 UTC	(20100422_0-27021)
   Log:
   - merge from trunk
