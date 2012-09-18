@@ -386,7 +386,7 @@ add_service(struct service_handler *service)
 
 	if(strchr(service->name, '.') != NULL)
 	{
-		mlog("ERR: Invalid service name %s", client_p->name);
+		mlog("ERR: Invalid service name %s", service->name);
 		return NULL;
 	}
 
