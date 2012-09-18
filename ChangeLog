@@ -1,3 +1,11 @@
+androsyn    2012/09/18 01:42:46 UTC	(20120918_0-27409)
+  Log:
+  fix uninitialized use of client_p in add_service, report service->name, not client_p->name
+
+  Modified:
+	rserv/branches/1_2/src/service.c (File Modified) 
+
+
 leeh        2010/04/22 18:27:28 UTC	(20100422_1-27023)
   Log:
   - update RELEASE_NOTES
